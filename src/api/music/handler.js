@@ -20,7 +20,7 @@ class MusicsHandler {
     async postAlbumHandler(request, h) {
       try {
         this._validator.validateMusicPayload(request.payload);
-        const { name='untitled', year  } = request.payload;
+        const { name, year  } = request.payload;
   
         const albumId = await this._service.addAlbum({ name, year });
   
@@ -57,8 +57,8 @@ class MusicsHandler {
     // Mendapatkan Album Berdasarkan ID
     async getAlbumByIdHandler(request, h) {
       try {
-        const { id } = request.params;
-        const album = await this._service.getAlbumById(id);
+        const { albumId } = request.params;
+        const album = await this._service.getAlbumById(albumId);
         return {
           status: 'success',
           data: {
@@ -90,10 +90,10 @@ class MusicsHandler {
     async putAlbumByIdHandler(request, h) {
       try {
         this._validator.validateMusicPayload(request.payload);
+        const { albumId } = request.params;
         const { name, year } = request.payload;
-        const { id } = request.params;
   
-        await this._service.ubahAlbumById(id, { name, year });
+        await this._service.ubahAlbumById(albumId, { name, year });
   
         return {
           status: 'success',

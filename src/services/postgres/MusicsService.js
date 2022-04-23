@@ -10,7 +10,7 @@ class MusicsService {
 
     // Memasukkan Album ke database
     async addAlbum({ name, year }) {
-        const id = 'album-';
+        let id = 'album-';
         id += nanoid(16);
         
         // memasukan album baru ke database
@@ -43,7 +43,7 @@ class MusicsService {
             throw new NotFoundError('Maaf, album tidak dapat ditemukan! :(');
         }
 
-        return result;
+        return result.rows[0].id;
     }
 
     // Mengubah data di database berdasarkan id yang diberikan
