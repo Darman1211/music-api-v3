@@ -1,8 +1,18 @@
+/* eslint-disable linebreak-style */
 const Joi = require('joi');
 
-const MusicPayloadSchema = Joi.object({
+const AlbumPayloadSchema = Joi.object({
   name: Joi.string().required(),
   year: Joi.number().required(),
 });
 
-module.exports = { MusicPayloadSchema };
+const SongPayloadSchema = Joi.object({
+  title: Joi.string().required(),
+  year: Joi.number().required(),
+  genre: Joi.string().required(),
+  performer: Joi.string().required(),
+  duration: Joi.number(),
+  albumId: Joi.string(),
+});
+
+module.exports = { AlbumPayloadSchema, SongPayloadSchema };

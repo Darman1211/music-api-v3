@@ -2,6 +2,7 @@ const { nanoid } = require("nanoid");
 const { Pool } = require("pg");
 const InvariantError = require("../../exceptions/InvariantError");
 const NotFoundError = require('../../exceptions/NotFoundError');
+const { mapDBToModel } = require('../../utils');
 
 class MusicsService {
     constructor() {
@@ -43,7 +44,7 @@ class MusicsService {
             throw new NotFoundError('Maaf, album tidak dapat ditemukan! :(');
         }
 
-        return result.rows[0].id;
+        return result.rows.map(mapDBToModel)[0];
     }
 
     // Mengubah data di database berdasarkan id yang diberikan
@@ -78,12 +79,12 @@ class MusicsService {
     // Memasukkan lagu ke database
     async addSong({ title, year, genre, performer, duration, albumId }) {
         
-        let id = 'song-';
+      let id = 'song-';
         id += nanoid(16);
         
         // memasukan lagu baru ke database
         const query = {
-          text: 'INSERT INTO songs VALUES($1, $2, $3, $4, $5, $6) RETURNING id',
+          text: 'INSERT INTO songs VALUES($1, $2, $3, $4, $5, $6, $7) RETURNING id',
           values: [id, title, year, genre, performer, duration, albumId],
         };
 
@@ -99,7 +100,7 @@ class MusicsService {
     // memanggil seluruh data lagu dari database
     async getSongs() {
         const result = await this._pool.query('SELECT * FROM songs');
-        return result;
+        return result.rows.map(mapDBToModel);
     }
 
     // memanggil data lagu berdasarkan id pada db
@@ -115,7 +116,7 @@ class MusicsService {
             throw new NotFoundError('Maaf, lagu tidak dapat ditemukan :(');
         }
 
-        return result;
+        return result.rows.map(mapDBToModel)[0];
     }
 
     // mengubah data lagu berdasarkan id pada db 

@@ -13,10 +13,11 @@ exports.up = pgm => {
             notNull: true,
         },
         year: {
-            type: 'VARCHAR(10)',
+            type: 'INT',
             notNull: true,
         },
     });
 };
 
 exports.down = pgm => {};
+
