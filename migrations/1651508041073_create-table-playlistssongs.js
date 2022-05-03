@@ -1,21 +1,21 @@
 /* eslint-disable arrow-parens */
 exports.up = pgm => {
-  pgm.createTable('albums', {
+  pgm.createTable('playlistssongs', {
     id: {
       type: 'VARCHAR(50)',
       primaryKey: true,
     },
-    name: {
-      type: 'TEXT',
+    playlistId: {
+      type: 'VARCHAR(50)',
       notNull: true,
     },
-    year: {
-      type: 'INT',
+    songId: {
+      type: 'VARCHAR(50)',
       notNull: true,
     },
   });
 };
 
 exports.down = pgm => {
-  pgm.dropTable('albums');
+  pgm.dropTable('playlistssongs');
 };

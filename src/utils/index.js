@@ -10,5 +10,5 @@ const mapDBToModel = ({
   duration,
   albumId,
 });
-  
-  module.exports = { mapDBToModel };
+
+module.exports = { mapDBToModel };
