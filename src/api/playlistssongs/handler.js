@@ -22,15 +22,15 @@ class PlaylistsSongsHandler {
       await this._service.verifyPlaylistAccess(playlistId, credentialId);
       await this._service.verifySongById(songId);
 
-      const PlaylistSong = await this._service.addSongToPlaylist({ playlistId, songId });
+      const playlistsong = await this._service.addSongToPlaylist({ playlistId, songId });
 
       const response = h.response({
         status: 'success',
+        message: 'Lagu berhasil ditambahkan ke playlist',
         data: {
-          PlaylistSong,
+          playlistsong,
         },
       });
-
       response.code(201);
       return response;
     } catch (error) {

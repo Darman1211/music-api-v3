@@ -6,18 +6,16 @@ const NotFoundError = require('../../exceptions/NotFoundError');
 const AuthorizationError = require('../../exceptions/AuthorizationError');
 
 class PlaylistsSongsService {
-  constructor() {
+  constructor(collaborationService) {
     this._pool = new Pool();
+    this._collaborationService = collaborationService;
   }
 
   // Fungsi menambahkan song ke playlist
-  async addSongToPlaylist({
-    playlistId, songId,
-  }) {
+  async addSongToPlaylist({ playlistId, songId }) {
     const id = `playlistsong-${nanoid(16)}`;
-
     const query = {
-      text: 'INSERT INTO playlistssongs VALUES($1, $2, $3, $4, $5) RETURNING id',
+      text: 'INSERT INTO playlistssongs VALUES($1, $2, $3) RETURNING id',
       values: [id, playlistId, songId],
     };
 
@@ -32,10 +30,10 @@ class PlaylistsSongsService {
   // fungsi melihat daftar lagu di dalam playlist
   async getPlaylistsSongs(playlistId) {
     const query = {
-      text: `SELECT songs.id as id, songs.title, songs.performer
+      text: `SELECT songs.id, songs.title, songs.performer
             FROM playlistssongs
-            JOIN songs on playlisstsongs.songId=songs.id
-            WHERE playlisstsongs.playlistId = $1`,
+            JOIN songs on playlistssongs.songid=songs.id
+            WHERE playlistssongs.playlistid = $1`,
       values: [playlistId],
     };
     const result = await this._pool.query(query);
@@ -45,7 +43,7 @@ class PlaylistsSongsService {
   // fungsi menghapus lagu dari playlist
   async deleteSongFromPlaylist(playlistId, songId) {
     const query = {
-      text: 'DELETE FROM playlistssongs WHERE playlistId = $1 AND songId = $2 RETURNING id',
+      text: 'DELETE FROM playlistssongs WHERE playlistid = $1 AND songid = $2 RETURNING id',
       values: [playlistId, songId],
     };
     const result = await this._pool.query(query);
@@ -55,10 +53,10 @@ class PlaylistsSongsService {
   }
 
   // fungsi mengecek jika lagu ada
-  async verifySongById(SongId) {
+  async verifySongById(songId) {
     const query = {
       text: 'SELECT * FROM songs WHERE id = $1',
-      values: [SongId],
+      values: [songId],
     };
     const result = await this._pool.query(query);
 
@@ -68,10 +66,10 @@ class PlaylistsSongsService {
   }
 
   // fungsi validasi playlists dari id dan owner request
-  async verifyPlaylistsOwner(PlaylistId, owner) {
+  async verifyPlaylistsOwner(playlistId, owner) {
     const query = {
       text: 'SELECT * FROM playlists WHERE id = $1',
-      values: [PlaylistId],
+      values: [playlistId],
     };
 
     const result = await this._pool.query(query);
@@ -80,24 +78,24 @@ class PlaylistsSongsService {
       throw new NotFoundError('Maaf! Playlist tidak dapat ditemukan');
     }
 
-    const note = result.rows[0];
+    const playlists = result.rows[0];
 
-    if (note.owner !== owner) {
+    if (playlists.owner !== owner) {
       throw new AuthorizationError('Maaf! Anda tidak berhak mengakses resource ini');
     }
   }
 
   // fungsi mengecek jika lagu ada/tidak didalam playlist
-  async verifySongByIdPlaylist(SongId) {
+  async verifySongByIdPlaylist(songId) {
     const query = {
-      text: 'SELECT * FROM playlistssongs WHERE songId = $1',
-      values: [SongId],
+      text: 'SELECT * FROM playlistssongs WHERE songid = $1',
+      values: [songId],
     };
 
     const result = await this._pool.query(query);
 
     if (!result.rows.length) {
-      throw new InvariantError('Lagu gagal dihapus');
+      throw new InvariantError('Maaf! Lagu tidak ada dalam playlist');
     }
   }
 

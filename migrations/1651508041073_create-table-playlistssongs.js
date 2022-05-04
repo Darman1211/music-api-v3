@@ -5,11 +5,11 @@ exports.up = pgm => {
       type: 'VARCHAR(50)',
       primaryKey: true,
     },
-    playlistId: {
+    playlistid: {
       type: 'VARCHAR(50)',
       notNull: true,
     },
-    songId: {
+    songid: {
       type: 'VARCHAR(50)',
       notNull: true,
     },

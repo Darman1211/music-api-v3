@@ -5,21 +5,21 @@ exports.up = pgm => {
       type: 'VARCHAR(50)',
       primaryKey: true,
     },
-    playlistId: {
+    playlistid: {
       type: 'VARCHAR(50)',
       notNull: true,
     },
-    userId: {
+    userid: {
       type: 'VARCHAR(50)',
       notNull: true,
     },
   });
 
-  pgm.addConstraint('collaborations', 'unique_playlistId_and_userId', 'UNIQUE("playlistId", "userId")');
-  pgm.addConstraint('collaborations', 'fk_collaborations.playlistId_playlists.id', 'FOREIGN KEY("playlistId") REFERENCES playlists(id) ON DELETE CASCADE');
-  pgm.addConstraint('collaborations', 'fk_collaborations.userId_users.id', 'FOREIGN KEY("userId") REFERENCES users(id) ON DELETE CASCADE');
+  pgm.addConstraint('collaborations', 'unique_playlistid_and_userid', 'UNIQUE(playlistid, userid)');
+  pgm.addConstraint('collaborations', 'fk_collaborations.playlistid_playlists.id', 'FOREIGN KEY(playlistid) REFERENCES playlists(id) ON DELETE CASCADE');
+  pgm.addConstraint('collaborations', 'fk_collaborations.userid_users.id', 'FOREIGN KEY(userid) REFERENCES users(id) ON DELETE CASCADE');
 };
 
 exports.down = pgm => {
-  pgm.dropTable('collaboration');
+  pgm.dropTable('collaborations');
 };

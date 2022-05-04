@@ -29,14 +29,15 @@ class PlaylistsService {
   }
 
   // Function Menampilkan Playlists
-  async getPlaylists(id) {
+  async getPlaylists(owner) {
     const query = {
-      text: `SELECT playlists.id as id, playlists.name as name, users.username as username
+      text: `SELECT playlists.id, playlists.name, users.username
                 FROM playlists
                 LEFT JOIN collaborations ON
-                collaborations.playlistId = playlists.id
-                WHERE playlists.owner = $1 OR collaborations.userId = $1`,
-      values: [id],
+                collaborations.playlistid = playlists.id
+                JOIN users on playlists.owner=users.id
+                WHERE playlists.owner = $1 OR collaborations.userid = $1`,
+      values: [owner],
     };
 
     const result = await this._pool.query(query);

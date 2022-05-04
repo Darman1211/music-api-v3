@@ -26,7 +26,7 @@ class CollaborationsService {
   // fungsi untuk menghapus collab
   async deleteCollaboration(playlistId, userId) {
     const query = {
-      text: 'DELETE FROM collaborations WHERE playlistId = $1 AND userId = $2 RETURNING id',
+      text: 'DELETE FROM collaborations WHERE playlistid = $1 AND userid = $2 RETURNING id',
       values: [playlistId, userId],
     };
 
@@ -40,7 +40,7 @@ class CollaborationsService {
   // fungsi untuk memverifikasi collaborator
   async verifyCollaborator(playlistId, userId) {
     const query = {
-      text: 'SELECT * FROM collaborations WHERE playlistId = $1 AND userId = $2',
+      text: 'SELECT * FROM collaborations WHERE playlistid = $1 AND useridS = $2',
       values: [playlistId, userId],
     };
 
