@@ -15,8 +15,8 @@ class PlaylistsSongsHandler {
   async postPlaylistSongHandler(request, h) {
     try {
       this._validator.validatePlaylistsSongsPayload(request.payload);
+      const { id: playlistId } = request.params;
       const { songId } = request.payload;
-      const { playlistId } = request.params;
       const { id: credentialId } = request.auth.credentials;
 
       await this._service.verifyPlaylistAccess(playlistId, credentialId);
@@ -57,16 +57,17 @@ class PlaylistsSongsHandler {
   // Mendapatkan Seluruh Playlist Song
   async getPlaylistsSongsHandler(request, h) {
     try {
-      const { playlistId } = request.params;
+      const { id: playlistId } = request.params;
       const { id: credentialId } = request.auth.credentials;
 
       await this._service.verifyPlaylistAccess(playlistId, credentialId);
-      const songs = await this._service.getPlaylistsSongs(playlistId);
+      const playlist = await this._service.getPlaylistById(playlistId);
+      playlist.songs = await this._service.getPlaylistsSongs(playlistId);
 
       return {
         status: 'success',
         data: {
-          songs,
+          playlist,
         },
       };
     } catch (error) {
@@ -95,7 +96,7 @@ class PlaylistsSongsHandler {
     try {
       this._validator.validatePlaylistsSongsPayload(request.payload);
       const { songId } = request.payload;
-      const { playlistId } = request.params;
+      const { id: playlistId } = request.params;
       const { id: credentialId } = request.auth.credentials;
 
       await this._service.verifyPlaylistAccess(playlistId, credentialId);

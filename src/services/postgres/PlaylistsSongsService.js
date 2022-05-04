@@ -32,12 +32,31 @@ class PlaylistsSongsService {
     const query = {
       text: `SELECT songs.id, songs.title, songs.performer
             FROM playlistssongs
-            JOIN songs on playlistssongs.songid=songs.id
+            INNER JOIN songs ON playlistssongs.songid=songs.id
             WHERE playlistssongs.playlistid = $1`,
       values: [playlistId],
     };
     const result = await this._pool.query(query);
     return result.rows;
+  }
+
+  // fungsi untuk menampilkan playlist berdasarkan id
+  async getPlaylistById(id) {
+    const query = {
+      text: `SELECT playlists.id, playlists.name, users.username 
+                FROM playlists
+                INNER JOIN users ON
+                playlists.owner=users.id
+                WHERE playlists.id = $1`,
+      values: [id],
+    };
+    const result = await this._pool.query(query);
+
+    if (!result.rows.length) {
+      throw new NotFoundError('Playlist tidak ditemukan');
+    }
+
+    return result.rows[0];
   }
 
   // fungsi menghapus lagu dari playlist
@@ -95,7 +114,7 @@ class PlaylistsSongsService {
     const result = await this._pool.query(query);
 
     if (!result.rows.length) {
-      throw new InvariantError('Maaf! Lagu tidak ada dalam playlist');
+      throw new InvariantError('Maaf! Lagu tidak tersedia');
     }
   }
 
