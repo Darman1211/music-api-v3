@@ -1,6 +1,9 @@
 {
     "env": {
+<<<<<<< HEAD
         "browser": true,
+=======
+>>>>>>> 8b582a2ce8cb6c03f198c80a2f81b93c019fee66
         "commonjs": true,
         "es2021": true,
         "node": true

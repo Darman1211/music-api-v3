@@ -25,7 +25,7 @@ class AuthenticationsService {
     const result = await this._pool.query(query);
 
     if (!result.rows.length) {
-      throw new InvariantError('Maaf.. Refresh token tidak valid');
+      throw new InvariantError('Maaf. Refresh token tidak valid');
     }
   }
 
