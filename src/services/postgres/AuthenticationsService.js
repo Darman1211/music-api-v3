@@ -7,7 +7,6 @@ class AuthenticationsService {
     this._pool = new Pool();
   }
 
-  // Fungsi menambahkan refresh token
   async addRefreshToken(token) {
     const query = {
       text: 'INSERT INTO authentications VALUES($1)',
@@ -17,7 +16,6 @@ class AuthenticationsService {
     await this._pool.query(query);
   }
 
-  // Fungsi verifyRefreshToken
   async verifyRefreshToken(token) {
     const query = {
       text: 'SELECT token FROM authentications WHERE token = $1',
@@ -31,7 +29,6 @@ class AuthenticationsService {
     }
   }
 
-  // Fungsi menghapus token
   async deleteRefreshToken(token) {
     const query = {
       text: 'DELETE FROM authentications WHERE token = $1',

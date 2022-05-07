@@ -11,7 +11,6 @@ class PlaylistsHandler {
     this.deletePlaylistByIdHandler = this.deletePlaylistByIdHandler.bind(this);
   }
 
-  // Menambahkan Playlist
   async postPlaylistHandler(request, h) {
     try {
       this._validator.validatePlaylistPayload(request.payload);
@@ -49,7 +48,6 @@ class PlaylistsHandler {
     }
   }
 
-  // Mendapatkan Seluruh Playlist
   async getPlaylistsHandler(request, h) {
     try {
       const { id: credentialId } = request.auth.credentials;
@@ -74,7 +72,6 @@ class PlaylistsHandler {
     }
   }
 
-  // Menghapus playlist berdasarkan ID
   async deletePlaylistByIdHandler(request, h) {
     try {
       const { id } = request.params;

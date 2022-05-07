@@ -8,7 +8,6 @@ class CollaborationsService {
     this._pool = new Pool();
   }
 
-  // fungsi untuk menambahkan collab
   async addCollaboration(playlistId, userId) {
     const id = `clb-${nanoid(16)}`;
     const query = {
@@ -23,7 +22,6 @@ class CollaborationsService {
     return result.rows[0].id;
   }
 
-  // fungsi untuk menghapus collab
   async deleteCollaboration(playlistId, userId) {
     const query = {
       text: 'DELETE FROM collaborations WHERE playlistid = $1 AND userid = $2 RETURNING id',
@@ -37,7 +35,6 @@ class CollaborationsService {
     }
   }
 
-  // fungsi untuk memverifikasi collaborator
   async verifyCollaborator(playlistId, userId) {
     const query = {
       text: 'SELECT * FROM collaborations WHERE playlistid = $1 AND useridS = $2',

@@ -10,7 +10,6 @@ class UsersService {
     this._pool = new Pool();
   }
 
-  // Menambahkan user baru
   async addUser({ username, password, fullname }) {
     await this.verifyNewUsername(username);
 
@@ -30,7 +29,6 @@ class UsersService {
     return result.rows[0].id;
   }
 
-  // Verifikasi user jika sudah ada
   async verifyNewUsername(username) {
     const query = {
       text: 'SELECT username FROM users WHERE username = $1',
@@ -44,7 +42,6 @@ class UsersService {
     }
   }
 
-  // verifikasi apakah kredensial yang dikirim benar/tidak
   async verifyUserCredential(username, password) {
     const query = {
       text: 'SELECT id, password FROM users WHERE username = $1',

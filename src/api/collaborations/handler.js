@@ -12,7 +12,6 @@ class CollaborationsHandler {
     this.deleteCollaborationHandler = this.deleteCollaborationHandler.bind(this);
   }
 
-  // fungsi untuk menambah collab
   async postCollaborationHandler(request, h) {
     try {
       this._validator.validateCollaborationPayload(request.payload);
@@ -55,7 +54,6 @@ class CollaborationsHandler {
     }
   }
 
-  // fungsi menghapus collab
   async deleteCollaborationHandler(request, h) {
     try {
       this._validator.validateCollaborationPayload(request.payload);

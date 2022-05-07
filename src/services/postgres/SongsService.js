@@ -10,14 +10,12 @@ class SongsService {
     this._pool = new Pool();
   }
 
-  // Memasukkan lagu ke database
   async addSong({
     title, year, genre, performer, duration, albumId,
   }) {
     let id = 'song-';
     id += nanoid(16);
 
-    // memasukan lagu baru ke database
     const query = {
       text: 'INSERT INTO songs VALUES($1, $2, $3, $4, $5, $6, $7) RETURNING id',
       values: [id, title, year, genre, performer, duration, albumId],
@@ -32,13 +30,11 @@ class SongsService {
     return result.rows[0].id;
   }
 
-  // memanggil seluruh data lagu dari database
   async getSongs() {
     const result = await this._pool.query('SELECT * FROM songs');
     return result.rows.map(mapDBToModel);
   }
 
-  // memanggil data lagu berdasarkan id pada db
   async getSongById(id) {
     const query = {
       text: 'SELECT * FROM songs WHERE id = $1',
@@ -54,7 +50,6 @@ class SongsService {
     return result.rows.map(mapDBToModel)[0];
   }
 
-  // mengubah data lagu berdasarkan id pada db
   async ubahSongById(id, {
     title, year, genre, performer, duration, albumId,
   }) {
@@ -70,7 +65,6 @@ class SongsService {
     }
   }
 
-  // menghapus data lagu berdasarkan id pada db
   async deleteSongById(id) {
     const query = {
       text: 'DELETE FROM songs WHERE id = $1 RETURNING id',

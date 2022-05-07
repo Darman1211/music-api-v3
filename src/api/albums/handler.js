@@ -12,7 +12,6 @@ class AlbumsHandler {
     this.deleteAlbumByIdHandler = this.deleteAlbumByIdHandler.bind(this);
   }
 
-  // Menambahkan Album
   async postAlbumHandler(request, h) {
     try {
       this._validator.validateAlbumPayload(request.payload);
@@ -50,19 +49,14 @@ class AlbumsHandler {
     }
   }
 
-  // Mendapatkan Album Berdasarkan ID
   async getAlbumByIdHandler(request, h) {
     try {
       const { id } = request.params;
       const album = await this._service.getAlbumById(id);
-      const song = await this._service.getSongOnAlbumId(id);
       return {
         status: 'success',
         data: {
-          album: {
-            ...album,
-            songs: song,
-          },
+          album,
         },
       };
     } catch (error) {
@@ -86,7 +80,6 @@ class AlbumsHandler {
     }
   }
 
-  // Mengubah album berdasarkan ID
   async putAlbumByIdHandler(request, h) {
     try {
       this._validator.validateAlbumPayload(request.payload);
@@ -120,7 +113,6 @@ class AlbumsHandler {
     }
   }
 
-  // Menghapus album berdasarkan ID
   async deleteAlbumByIdHandler(request, h) {
     try {
       const { id } = request.params;

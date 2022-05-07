@@ -11,7 +11,6 @@ class PlaylistsSongsService {
     this._collaborationService = collaborationService;
   }
 
-  // Fungsi menambahkan song ke playlist
   async addSongToPlaylist({ playlistId, songId }) {
     const id = `playlistsong-${nanoid(16)}`;
     const query = {
@@ -27,7 +26,6 @@ class PlaylistsSongsService {
     return result.rows[0].id;
   }
 
-  // fungsi melihat daftar lagu di dalam playlist
   async getPlaylistsSongs(playlistId) {
     const query = {
       text: `SELECT songs.id, songs.title, songs.performer
@@ -40,7 +38,6 @@ class PlaylistsSongsService {
     return result.rows;
   }
 
-  // fungsi untuk menampilkan playlist berdasarkan id
   async getPlaylistById(id) {
     const query = {
       text: `SELECT playlists.id, playlists.name, users.username 
@@ -59,7 +56,6 @@ class PlaylistsSongsService {
     return result.rows[0];
   }
 
-  // fungsi menghapus lagu dari playlist
   async deleteSongFromPlaylist(playlistId, songId) {
     const query = {
       text: 'DELETE FROM playlistssongs WHERE playlistid = $1 AND songid = $2 RETURNING id',
@@ -71,7 +67,6 @@ class PlaylistsSongsService {
     }
   }
 
-  // fungsi mengecek jika lagu ada
   async verifySongById(songId) {
     const query = {
       text: 'SELECT * FROM songs WHERE id = $1',
@@ -84,7 +79,19 @@ class PlaylistsSongsService {
     }
   }
 
-  // fungsi validasi playlists dari id dan owner request
+  async verifySongByIdPlaylist(songId) {
+    const query = {
+      text: 'SELECT * FROM playlistssongs WHERE songid = $1',
+      values: [songId],
+    };
+
+    const result = await this._pool.query(query);
+
+    if (!result.rows.length) {
+      throw new InvariantError('Maaf! Lagu tidak tersedia');
+    }
+  }
+
   async verifyPlaylistsOwner(playlistId, owner) {
     const query = {
       text: 'SELECT * FROM playlists WHERE id = $1',
@@ -104,21 +111,6 @@ class PlaylistsSongsService {
     }
   }
 
-  // fungsi mengecek jika lagu ada/tidak didalam playlist
-  async verifySongByIdPlaylist(songId) {
-    const query = {
-      text: 'SELECT * FROM playlistssongs WHERE songid = $1',
-      values: [songId],
-    };
-
-    const result = await this._pool.query(query);
-
-    if (!result.rows.length) {
-      throw new InvariantError('Maaf! Lagu tidak tersedia');
-    }
-  }
-
-  // fungsi untuk memverifikasi playlist berdasarkan collaboration
   async verifyPlaylistAccess(playlistId, userId) {
     try {
       await this.verifyPlaylistsOwner(playlistId, userId);

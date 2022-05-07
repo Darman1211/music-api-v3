@@ -13,7 +13,6 @@ class AuthenticationsHandler {
     this.deleteAuthenticationHandler = this.deleteAuthenticationHandler.bind(this);
   }
 
-  // Autentikasi pengguna/login
   async postAuthenticationHandler(request, h) {
     try {
       this._validator.validatePostAuthenticationPayload(request.payload);
@@ -57,7 +56,6 @@ class AuthenticationsHandler {
     }
   }
 
-  // Memperbaharui akses token
   async putAuthenticationHandler(request, h) {
     try {
       this._validator.validatePutAuthenticationPayload(request.payload);
@@ -96,7 +94,6 @@ class AuthenticationsHandler {
     }
   }
 
-  // Menghapus autentikasi
   async deleteAuthenticationHandler(request, h) {
     try {
       this._validator.validateDeleteAuthenticationPayload(request.payload);

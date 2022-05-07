@@ -13,7 +13,6 @@ class SongsHandler {
     this.deleteSongByIdHandler = this.deleteSongByIdHandler.bind(this);
   }
 
-  // Menambahkan Lagu
   async postSongHandler(request, h) {
     try {
       this._validator.validateSongPayload(request.payload);
@@ -64,7 +63,6 @@ class SongsHandler {
     }
   }
 
-  // Mendapatkan Seluruh Lagu
   async getSongsHandler(request) {
     const songs = await this._service.getSongs();
 
@@ -93,7 +91,6 @@ class SongsHandler {
     };
   }
 
-  // Mendapatkan Lagu Berdasarkan ID
   async getSongByIdHandler(request, h) {
     try {
       const { id } = request.params;
@@ -125,7 +122,6 @@ class SongsHandler {
     }
   }
 
-  // Mengubah lagu berdasarkan id
   async putSongByIdHandler(request, h) {
     try {
       this._validator.validateSongPayload(request.payload);
@@ -173,7 +169,6 @@ class SongsHandler {
     }
   }
 
-  // Menghapus lagu berdasarkan ID
   async deleteSongByIdHandler(request, h) {
     try {
       const { id } = request.params;

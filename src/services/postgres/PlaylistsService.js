@@ -11,7 +11,6 @@ class PlaylistsService {
     this._collaborationService = collaborationService;
   }
 
-  // Menambahkan playlist
   async addPlaylist({ name, owner }) {
     const id = `playlist-${nanoid(16)}`;
 
@@ -28,15 +27,19 @@ class PlaylistsService {
     return result.rows[0].id;
   }
 
-  // Function Menampilkan Playlists
   async getPlaylists(owner) {
     const query = {
-      text: `SELECT playlists.id, playlists.name, users.username
-                FROM playlists
-                LEFT JOIN collaborations ON
-                collaborations.playlistid = playlists.id
-                JOIN users on playlists.owner=users.id
-                WHERE playlists.owner = $1 OR collaborations.userid = $1`,
+      text: `SELECT
+                  playlists.id,
+                  playlists.name,
+                  users.username
+              FROM playlists
+              LEFT JOIN collaborations
+                ON collaborations.playlistid = playlists.id
+              LEFT JOIN users
+                ON users.id = playlists.owner
+              WHERE playlists.owner = $1
+                OR collaborations.userid = $1`,
       values: [owner],
     };
 
@@ -44,7 +47,21 @@ class PlaylistsService {
     return result.rows;
   }
 
-  // fungsi untuk hapus Playlists
+  async getPlaylistById(id) {
+    const query = {
+      text: 'SELECT * FROM playlists WHERE id = $1',
+      values: [id],
+    };
+
+    const result = await this._pool.query(query);
+
+    if (!result.rows.length) {
+      throw new NotFoundError('Maaf! Playlist tidak dapat ditemukan');
+    }
+
+    return result.rows[0];
+  }
+
   async deletePlaylists(id) {
     const query = {
       text: 'DELETE FROM playlists WHERE id = $1 RETURNING id',
@@ -57,7 +74,6 @@ class PlaylistsService {
     }
   }
 
-  // Fungsi untuk verifikasi playlists
   async verifyPlaylistOwner(id, owner) {
     const query = {
       text: 'SELECT * FROM playlists WHERE id = $1',
@@ -77,10 +93,9 @@ class PlaylistsService {
     }
   }
 
-  // fungsi untuk verifikasi playlists collaboration
   async verifyPlaylistAccess(playlistId, userId) {
     try {
-      await this.verifyPlaylistsOwner(playlistId, userId);
+      await this.verifyPlaylistOwner(playlistId, userId);
     } catch (error) {
       if (error instanceof NotFoundError) {
         throw error;
