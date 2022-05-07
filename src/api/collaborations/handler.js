@@ -3,13 +3,20 @@
 const ClientError = require('../../exceptions/ClientError');
 
 class CollaborationsHandler {
-  constructor(collaborationsService, playlistsService, validator) {
+  constructor(
+    collaborationsService,
+    playlistsService,
+    usersService,
+    validator
+  ) {
     this._collaborationsService = collaborationsService;
     this._playlistsService = playlistsService;
+    this._usersService = usersService;
     this._validator = validator;
 
     this.postCollaborationHandler = this.postCollaborationHandler.bind(this);
-    this.deleteCollaborationHandler = this.deleteCollaborationHandler.bind(this);
+    this.deleteCollaborationHandler =
+      this.deleteCollaborationHandler.bind(this);
   }
 
   async postCollaborationHandler(request, h) {
@@ -18,17 +25,23 @@ class CollaborationsHandler {
 
       const { id: credentialId } = request.auth.credentials;
       const { playlistId, userId } = request.payload;
-      await this._playlistsService.verifyPlaylistsOwner(playlistId, credentialId);
+
+      await this._playlistsService.verifyPlaylistOwner(
+        playlistId,
+        credentialId
+      );
+      await this._usersService.verifyAvailableUser(userId);
 
       const collabId = await this._collaborationsService.addCollaboration(
-        playlistId, userId,
+        playlistId,
+        userId
       );
 
       const response = h.response({
         status: 'success',
         message: 'Kolaborasi berhasil ditambahkan',
         data: {
-          collabId,
+          collaborationId: collabId,
         },
       });
       response.code(201);
@@ -60,7 +73,10 @@ class CollaborationsHandler {
       const { id: credentialId } = request.auth.credentials;
       const { playlistId, userId } = request.payload;
 
-      await this._playlistsService.verifyPlaylistsOwner(playlistId, credentialId);
+      await this._playlistsService.verifyPlaylistOwner(
+        playlistId,
+        credentialId
+      );
       await this._collaborationsService.deleteCollaboration(playlistId, userId);
 
       return {

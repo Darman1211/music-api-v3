@@ -37,7 +37,7 @@ class CollaborationsService {
 
   async verifyCollaborator(playlistId, userId) {
     const query = {
-      text: 'SELECT * FROM collaborations WHERE playlistid = $1 AND useridS = $2',
+      text: 'SELECT * FROM collaborations WHERE playlistid = $1 AND userid = $2',
       values: [playlistId, userId],
     };
 

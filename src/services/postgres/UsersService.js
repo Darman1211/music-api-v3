@@ -4,6 +4,7 @@ const bcrypt = require('bcrypt');
 const { nanoid } = require('nanoid');
 const InvariantError = require('../../exceptions/InvariantError');
 const AuthenticationError = require('../../exceptions/AuthenticationError');
+const NotFoundError = require('../../exceptions/NotFoundError');
 
 class UsersService {
   constructor() {
@@ -38,7 +39,9 @@ class UsersService {
     const result = await this._pool.query(query);
 
     if (result.rows.length > 0) {
-      throw new InvariantError('Maaf! Gagal menambahkan user. Username telah digunakan. Cobalah dengan username yang berbeda :)');
+      throw new InvariantError(
+        'Maaf! Gagal menambahkan user. Username telah digunakan. Cobalah dengan username yang berbeda :)'
+      );
     }
   }
 
@@ -62,6 +65,19 @@ class UsersService {
       throw new AuthenticationError('Maaf! Kredensial yang Anda berikan salah');
     }
     return id;
+  }
+
+  async verifyAvailableUser(id) {
+    const query = {
+      text: 'SELECT * FROM users WHERE id = $1',
+      values: [id],
+    };
+
+    const result = await this._pool.query(query);
+
+    if (!result.rows.length) {
+      throw new NotFoundError('User tidak ditemukan');
+    }
   }
 }
 
